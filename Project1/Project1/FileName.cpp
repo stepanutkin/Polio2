@@ -2,21 +2,25 @@
 
 class Figure {
 public:
-	Figure() :Figure("Figure") {
+	Figure() {
 	}
-	virtual void print_info() {
-		std::cout << name << ":" << std::endl;
+	virtual void print_info(Figure* figure)
+	{
+		figure->print_info(figure);
 	}
-protected:
-	Figure(std::string name) {
-		this->name = name;
-	}
-	std::string name;
+
 };
 
 class Triangle:public Figure{
 public :
-	Triangle() :Triangle(10, 20, 30,40, 50, 60,"Triangle") {}
+Triangle(double a, double b, double c, double A, double B, double C){
+		this->a = a;
+		this->b = b;
+		this->c = c;
+		this->A = A;
+		this->B = B;
+		this->C = C;
+	}
 	double get_a() {
 		return a;
 	}
@@ -35,21 +39,9 @@ public :
 	double get_C() {
 		return C;
 	}
-
-	 void print_info() override {
-		 std::cout << name << std::endl;
+  void print_info(Figure*) override{
 		std::cout << "Edges: " << "a = " << get_a() << " b = " << get_b() << " c = " << get_c() << std::endl;
 		std::cout << "Angles: " << "A = " << get_A() << " B = " << get_B() << " C = " << get_C() << std::endl;
-	}
-
-protected:
-	Triangle(double a, double b, double c, double A, double B, double C,std::string name):Figure(name) {
-		this->a = a;
-		this->b = b;
-		this->c = c;
-		this->A = A;
-		this->B = B;
-		this->C = C;
 	}
 private:
 	double a, b, c ;
@@ -57,36 +49,34 @@ private:
 };
 
 class right_trian :public Triangle {
-protected:
-	right_trian(double a, double b, double c, double d,double e,std::string name) :Triangle(a,b,c,d,e,90,name) {
-	}
 public:
-	right_trian() :right_trian(10,20, 30, 45, 45,"right_triangle") {
-	}
-	
+	right_trian(double a, double b, double c, double A, double B):Triangle(a,b,c,A,B,90){}
 };
 
 class isosceles_triangle : public Triangle {
-protected:
-	isosceles_triangle(double a,double b, double A, double B,std::string name) :Triangle(a, b, a, A,B,A,name) {
-	}
 public:
-	isosceles_triangle() :isosceles_triangle(20,10, 40, 60,"isosceles_triangle") {
+	isosceles_triangle(double a,double b, double A, double B) :Triangle(a,b,a,A,B,A) {
 	}
 };
 
 class equilateral_triangle : public Triangle {
-protected:
-	equilateral_triangle(double a, double A,std::string name) :Triangle(a, a, a, A, A, A,name) {
-}
 public:
-	equilateral_triangle() :equilateral_triangle(25, 60,"equilateral_triangle") {
-	}
+	equilateral_triangle(double a) :Triangle(a, a, a, 60, 60, 60){
+}
 };
 
 class Quadrilateral:public Figure{
 public:
-	Quadrilateral() :Quadrilateral(10, 20, 30, 40, 50, 60, 70, 80,"Quadrilateral") {}
+	Quadrilateral(double a, double b, double c,double d, double A, double B, double C,double D){
+		this->a = a;
+		this->b = b;
+		this->c = c;
+		this->d = d;
+		this->A = A;
+		this->B = B;
+		this->C = C;
+		this->D = D;
+	}
 	double get_a() {
 		return a;
 	}
@@ -111,112 +101,90 @@ public:
 	double get_D() {
 		return D;
 	}
-	void print_info() override{
-		std::cout << name << std::endl;
+	void print_info(Figure* f) override{
 		std::cout << "Edges: " << "a = " << get_a() << " b = " << get_b() << " c = " << get_c() << " d = " << get_d() << std::endl;
 		std::cout << "Angles: " << "A = " << get_A() << " B = " << get_B() << " C = " << get_C() << " D = " << get_D() << std::endl;
 	}
-protected:
-	Quadrilateral(double a, double b, double c,double d, double A, double B, double C,double D, std::string name):Figure(name){
-		this->a = a;
-		this->b = b;
-		this->c = c;
-		this->d = d;
-		this->A = A;
-		this->B = B;
-		this->C = C;
-		this->D = D;
-	}
-
 private:
 	double a, b, c, d;
 	double A, B, C, D;
 };
 
-class parallelogram :public Quadrilateral {
-protected:
-	parallelogram(double a, double b, double A, double B,std::string name) :Quadrilateral(a, b, a, b, A, B, A, B,name) {
-	}
-	parallelogram(double a, double A, double B, std::string name) :Quadrilateral(a, a, a, a, A, B, A, B,name) {
-	}
 
+class parallelogram :public Quadrilateral {
 public:
-	parallelogram() :parallelogram(10, 20, 30, 40,"parallelogram") {
+	parallelogram(double a, double b, double A, double B) :Quadrilateral(a, b, a, b, A, B, A, B) {
 	}
 };
 
 class rhombus :public parallelogram {
-protected:
-	rhombus(double a, double A, double B, std::string name) :parallelogram(a, A, B, name) {
-	}
-	rhombus(double a,std::string name) :parallelogram(a, 90, 90, name) {
-	}
 public:
-	rhombus() :rhombus(10,20,30, "rhombus") {
+	rhombus(double a, double A, double B) :parallelogram(a,a, A, B) {
 	}
 };
+
 
 class square :public rhombus {
-protected:
-	square(double a,std::string name) :rhombus(a,name) {}
 public:
-	square() :square(10, "square") {
+	square(double a) :rhombus(a,90,90) {}
+};
+
+
+
+class rectangle :public parallelogram {
+public:
+	rectangle(double a, double b) :parallelogram(a, b, 90, 90) {
 	}
 };
 
-class rectangle :public parallelogram {
-protected:
-	rectangle(double a, double b,std::string name) :parallelogram(a, b, 90, 90,name) {
-	}
-public:
-	rectangle():rectangle(10, 20,"rectangle") {
-	}
-};
 
 
 int main() {
 	
-	Figure a;
-	a.print_info();
+	Triangle t(10,20,30,40,50,60);
+	std::cout << "Triangle:" << std::endl;
+	t.print_info(&t);
+	std::cout << std::endl;
+	
+	isosceles_triangle b(20,60,70,30);
+	std::cout << "Isosceles_Triangle:" << std::endl;
+	b.print_info(&b);
 	std::cout << std::endl;
 
-	Triangle t;
-	t.print_info();
+	equilateral_triangle e(30);
+	std::cout << "equilateral_triangle:" << std::endl;
+	e.print_info(&e);
 	std::cout << std::endl;
 
-	isosceles_triangle b;
-	b.print_info();
+	right_trian f(30,40,50,50,60);
+	std::cout << "Right_Triangle:" << std::endl;
+	f.print_info(&f);
 	std::cout << std::endl;
 
-	equilateral_triangle e;
-	e.print_info();
+	Quadrilateral r(30,40,50,60,70,80,90,100);
+	std::cout << "Quadrilateral:" << std::endl;
+	r.print_info(&r);
 	std::cout << std::endl;
 
-	right_trian f;
-	f.print_info();
+	parallelogram p(30,40,60,70);
+	std::cout << "parallelogram:" << std::endl;
+	p.print_info(&p);
 	std::cout << std::endl;
 
-	Quadrilateral r;
-	r.print_info();
+	rhombus u(10,20,30);
+	std::cout << "rhombus:" << std::endl;
+	u.print_info(&u);
 	std::cout << std::endl;
 
-	parallelogram p;
-	p.print_info();
+	square x(30);
+	std::cout << "square:" << std::endl;
+	x.print_info(&x);
 	std::cout << std::endl;
 
-	rhombus u;
-	u.print_info();
+	rectangle y(40,50);
+	std::cout << "rectangle:" << std::endl;
+	y.print_info(&y);
 	std::cout << std::endl;
-
-	square x;
-	x.print_info();
-	std::cout << std::endl;
-
-	rectangle y;
-	y.print_info();
-	std::cout << std::endl;
-
-
 
 	return 0;
 }
